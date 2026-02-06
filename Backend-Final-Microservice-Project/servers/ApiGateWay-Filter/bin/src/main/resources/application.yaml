@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: ApiGateWay-Filter
+server:
+  port: 8085
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        # ================= USER SERVICE =================
+        - id: user-service
+          uri: lb://user-services
+          predicates:
+            - Path=/api/users/**
+
+        # ================= PROFILE SERVICE =================
+        - id: profile-service
+          uri: lb://profile-service
+          predicates:
+            - Path=/api/profile/**
+
+        # ================= LOGIN SERVICE =================
+        - id: login-service
+          uri: lb://login-service
+          predicates:
+            - Path=/api/login/**, /api/register/**
+
+        # ================= AUDIT SERVICE =================
+        - id: audit-service
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/audit/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
